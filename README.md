@@ -6,5 +6,5 @@
 ### Run Tests
 
 ```sh
-npm run dev
+npm test
 ``` 
