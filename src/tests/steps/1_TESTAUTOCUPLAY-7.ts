@@ -16,12 +16,13 @@ When('the user clicks on the subscribe newsletter button', async function () {
     const [newTab] = await Promise.all([
         page.context().waitForEvent("page"),
         await page.getByText("Subscribe our Newsletter").click()
-    ])
+    ]);
     newPage = newTab;
 });
 
 Then('the form opens in a new tab', async function () {
     await newPage.waitForLoadState();
-    await expect(newPage.getByText("Present Technologies Newsletter"))
-        .toBeVisible();
+    await expect(
+        newPage.getByText("Present Technologies Newsletter")
+    ).toBeVisible();
 });

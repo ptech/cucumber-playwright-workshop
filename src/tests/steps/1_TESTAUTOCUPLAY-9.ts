@@ -5,26 +5,33 @@ import Utils from "../../utils/utils";
 
 let utils: Utils;
 
-When('the user fills the contact form', async function () {
+When('the user fills the contact form except the {string} field', async function (emptyField) {
     utils = new Utils(page);
-    await utils.fillInput("Name", "Test");
-    await utils.fillInput("Email", "test@test.test");
-    await utils.fillInput("Message", "this is a test message, please ignore");
-});
 
-When('the user clears the name field', async function () {
-    await page.getByRole("form").getByPlaceholder("Name").clear();
-    await expect(page.getByRole("form").getByPlaceholder("Name")).toBeEmpty();
-    await page.getByRole("form").click();
+    const fieldsToFill = [
+        { label: 'Name', value: 'Test' },
+        { label: 'Email', value: 'test@test.test' },
+        { label: 'Message', value: 'this is a test message, please ignore' },
+    ];
+    
+    for (const field of fieldsToFill) {
+        if (field.label === emptyField) {
+            await expect(
+                page.getByRole("form").getByPlaceholder(emptyField)
+            ).toBeEmpty();
+        } else {
+            await utils.fillInput(field.label, field.value);
+        }
+    }
 });
 
 When('the user clicks to send the contact form', async function () {
-    await page.locator("input[type='submit']").click();
+    await page.getByRole("button", { name: "send" }).click();
 });
 
-Then('an error message is displayed under the send button', async function () {
-    await expect(page.getByRole("form")
-        .getByText("One or more fields have an error. Please check and try again.")
+Then('an error message is displayed under the field', async function () {
+    await expect(
+        page.getByRole("form").getByText("The field is required.")
     ).toBeVisible();
 });
 

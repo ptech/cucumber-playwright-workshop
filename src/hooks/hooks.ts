@@ -18,8 +18,8 @@ Before(async function ({ pickle }) {
     page = await context.newPage();
 });
 
-After(async function () {
-    await context.tracing.stop({ path: "trace.zip" });
+After(async function ({ pickle }) {
+    await context.tracing.stop({ path: `${pickle.name}_${pickle.id}.zip` });
     if (context) await context.close();
     if (browser) await browser.close();
 });
