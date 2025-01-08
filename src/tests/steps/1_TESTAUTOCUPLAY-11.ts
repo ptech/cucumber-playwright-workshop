@@ -12,7 +12,7 @@ When('the user fills the contact form', async function () {
     await utils.fillInput("Message", "this is a test message, please ignore");
 });
 
-When('the user clicks on send button when the service is down', async function () {
+When('the user clicks on send button when the service returns an error', async function () {
     const requestUrl = "https://www.present-technologies.com/wp-json/contact-form-7/v1/contact-forms/9/feedback";
     const interceptBody = `{
         "contact_form_id": 9,
