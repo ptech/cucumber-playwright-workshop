@@ -19,7 +19,7 @@ Before(async function ({ pickle }) {
 });
 
 After(async function ({ pickle }) {
-    await context.tracing.stop({ path: `${pickle.name}_${pickle.id}.zip` });
+    await context.tracing.stop({ path: `test-results/${pickle.name} ${pickle.id}.zip` });
     if (context) await context.close();
     if (browser) await browser.close();
 });
