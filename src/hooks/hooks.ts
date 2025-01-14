@@ -14,7 +14,7 @@ Before(async function ({ pickle }) {
         sources: true,
         screenshots: true,
         snapshots: true
-    })
+    });
     page = await context.newPage();
 });
 
