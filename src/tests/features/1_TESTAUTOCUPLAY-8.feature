@@ -13,4 +13,3 @@ Feature: [Workshop] Open QA automation job opening and validate content
 		| NICE TO HAVE                           |
 		| PERKS                                  |
 		And an apply online form is visible
-		

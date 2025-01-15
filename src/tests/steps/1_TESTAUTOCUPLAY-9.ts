@@ -1,29 +1,37 @@
-import { When, Then, Given } from "@cucumber/cucumber";
+import { When, Then } from "@cucumber/cucumber";
 import { expect } from "@playwright/test";
-import { browser, page } from "./1_TESTAUTOCUPLAY-7";
+import { page } from "../../hooks/hooks";
+import Utils from "../../utils/utils";
 
-When('the user fills the contact form', async function () {
-    await page.getByRole("form").getByPlaceholder("Name").fill("Test");
-    await expect(page.getByRole("form").getByPlaceholder("Name")).toHaveValue("Test");
-    await page.getByRole("form").getByPlaceholder("Email").fill("test@test.test");
-    await expect(page.getByRole("form").getByPlaceholder("Email")).toHaveValue("test@test.test");
-    await page.getByRole("form").getByPlaceholder("Message").fill("this is a test message, please ignore");
-    await expect(page.getByRole("form").getByPlaceholder("Message")).toHaveValue("this is a test message, please ignore");
-  });
+let utils: Utils;
 
-When('the user clears the name field', async function () {
-    await page.getByRole("form").getByPlaceholder("Name").clear();
-    await expect(page.getByRole("form").getByPlaceholder("Name")).toBeEmpty();
-    await page.getByRole("form").click();
+When('the user fills the contact form except the {string} field', async function (emptyField) {
+    utils = new Utils(page);
+
+    const fieldsToFill = [
+        { label: 'Name', value: 'Test' },
+        { label: 'Email', value: 'test@test.test' },
+        { label: 'Message', value: 'this is a test message, please ignore' },
+    ];
+    
+    for (const field of fieldsToFill) {
+        if (field.label === emptyField) {
+            await expect(
+                page.getByRole("form").getByPlaceholder(emptyField)
+            ).toBeEmpty();
+        } else {
+            await utils.fillInput(field.label, field.value);
+        }
+    }
 });
 
 When('the user clicks to send the contact form', async function () {
-    await page.locator("input[type='submit']").click();
-    
+    await page.getByRole("button", { name: "send" }).click();
 });
 
-Then('an error message is displayed under the send button', async function () {
-    await expect(page.getByRole("form").getByText("One or more fields have an error. Please check and try again.")).toBeVisible();
-    browser.close();
+Then('an error message is displayed under the field', async function () {
+    await expect(
+        page.getByRole("form").getByText("The field is required.")
+    ).toBeVisible();
 });
 
